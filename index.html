@@ -1,49 +1,108 @@
 <!doctype html>
 <html>
 <head>
-  <title>Dropbox JavaScript SDK</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Codificação caracteres da página -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- SEO Geral -->
+  <title>Notesapp</title>
+  <meta name="description" content="A ferramenta de Notas Notesapp foi projetada com alunos e professores em mente. É uma ferramenta de estudo on-line gratuita que pode ajudá-lo a capturar pensamentos rapidamente e ajudá-lo a aprender.">
+  <link rel="canonical" href="http://localhost/notesapp/">
+  <meta name="author" content="marcosrdac">
+  <meta name="author" content="ReinanHS">
+  <meta name="robots" content="index">
   
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Custom Fonts -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="shortcut icon" href="img/favicon.ico" />
   
 </head>
 <body>
-  <div class="container main">
+
+  <div class="main">
+
     <div id="pre-auth-section" style="display:none;">
-      <p>This example takes the user through Dropbox's API OAuth flow using <code>Dropbox.getAuthenticationUrl()</code> method [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#getAuthenticationUrl">docs</a>] and then uses the generated access token to list the contents of their root directory.</p>
-      <a href="" id="authlink" class="btn btn-sucess">Login</a>
-      <p class="info">Once authenticated, it will use the access token to list the files in your root directory.</p>
+      <!-- <a href="" id="authlink" class="button">Authenticate</a> -->
+
+      <header class="masthead d-flex">
+        <div class="container text-center my-auto">
+          <h1 class="mb-1">Notesapp</h1>
+          <h3 class="mb-5">
+            <em>Suas melhores ideias estão sempre com você e sempre sincronizadas.</em>
+          </h3>
+          <a class="btn btn-primary btn-xl js-scroll-trigger" href="" id="authlink"><i class="fab fa-dropbox"></i> Login pelo dropbox</a>
+        </div>
+        <div class="overlay"></div>
+      </header>
+
     </div>
 
     <div id="authed-section" style="display:none;">
-      <p>You have successfully authenticated. Below are the contents of your root directory. They were fetched using the SDK and access token.</p>
-      <ul id="files"></ul>
-      <section class="container main">
-          <p>This example shows how to use the <code>Dropbox.filesUpload()</code> [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#filesUpload">docs</a>] method to upload a file.</p>
 
-          <form onSubmit="return uploadFile()">
-            <input type="text" id="access-token" placeholder="Access token" />
-            <input type="file" id="file-upload" />
-            <button type="submit">Submit</button>
-          </form>
 
-          <!-- A place to show the status of the upload -->
-          <h2 id="results"></h2>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Modified</th>
+          </tr>
+        </thead>
+        <tbody id="file"></tbody>
+      </table>
 
-          <p class="info">To obtain an access token for quick testing, you can go to <a href="https://dropbox.github.io/dropbox-api-v2-explorer/#files_list_folder" target="_blank">API Explorer</a> click the "Get Token" button on the top right, copy the token it creates and then paste it here.</p>
-      </section>
+
+
+
     </div>
+
   </div>
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+
+
+
+  <!-- <div id="authed-section" style="display:none;">
+    <p>You have successfully authenticated. Below are the contents of your root directory. They were fetched using the SDK and access token.</p>
+    <ul id="files"></ul>
+    <section class="container main">
+        <p>This example shows how to use the <code>Dropbox.filesUpload()</code> [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#filesUpload">docs</a>] method to upload a file.</p>
+
+        <form onSubmit="return uploadFile()">
+          <input type="text" id="access-token" placeholder="Access token" />
+          <input type="file" id="file-upload" />
+          <button type="submit">Submit</button>
+        </form>
+
+        A place to show the status of the upload
+        <h2 id="results"></h2>
+
+        <p class="info">To obtain an access token for quick testing, you can go to <a href="https://dropbox.github.io/dropbox-api-v2-explorer/#files_list_folder" target="_blank">API Explorer</a> click the "Get Token" button on the top right, copy the token it creates and then paste it here.</p>
+    </section>
+  </div> -->
+
+
+
+
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Dropbox API -->
+  <script src="js/polyfill.min.js"></script>
+  <script src="js/fetch.js"></script>
   <script src="node_modules/dropbox/dist/Dropbox-sdk.min.js"></script>
   <script src="node_modules/dropbox/dist/utils.js"></script>
+  <!-- Meus scripts JavaScript -->
   <script src="js/main.js"></script>
   <script src="js/app.js"></script>
 </body>

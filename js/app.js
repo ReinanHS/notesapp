@@ -1,33 +1,44 @@
+// Variáveis constantes
 var CLIENT_ID = getClientID();
-// Parses the url and gets the access token if it is in the urls hash
+var WEB_SITE_URL = 'http://localhost/notesapp/';
+// Analisa a url e obtém o token de acesso se estiver no hash de urls
 function getAccessTokenFromUrl() {
- return utils.parseQueryString(window.location.hash).access_token;
+  // Aqui estamos verificando se o usuário já fez uma autenticação.
+  if(localStorage.getItem('token') != null){
+    return localStorage.getItem('token');
+  }
+  // Se é a primeira vez que ele vai fazer a autenticação.
+  else{
+    return utils.parseQueryString(window.location.hash).access_token;
+  }
 }
-// If the user was just redirected from authenticating, the urls hash will
-// contain the access token.
+// Se o usuário acabasse de ser redirecionado da autenticação, o hash da URL
+// Tem o token de acesso.
 function isAuthenticated() {
   return !!getAccessTokenFromUrl();
 }
-// Render a list of items to #files
-function renderItems(items) {
-  var filesContainer = document.getElementById('files');
-  items.forEach(function(item) {
-    var li = document.createElement('li');
-    li.innerHTML = item.name;
-    filesContainer.appendChild(li);
-  });
-}
-// This example keeps both the authenticate and non-authenticated setions
-// in the DOM and uses this function to show/hide the correct section.
+// Este exemplo mantém as sessões de autenticação e de não autênticados
+// Aqui vemos se usuário está autênticado ou não
+// Se ele estive autênticado nos ativamos a DIV
 function showPageSection(elementId) {
   document.getElementById(elementId).style.display = 'block';
 }
+// Se ele estive autênticado ou isAuthenticated == True
 if (isAuthenticated()) {
+  // Se ele estive autênticado nos ativamos a DIV
   showPageSection('authed-section');
-  localStorage.setItem("token", getAccessTokenFromUrl());
+  // Aqui vamos salvar o token em uma session Storage para não precisar autenticar novamente.
+  /*
+  
+  O objeto localStorage armazena os dados sem data de validade. 
+  Os dados não serão excluídos quando o navegador estiver fechado e estarão disponíveis 
+  no próximo dia, semana ou ano.
 
-  // Create an instance of Dropbox with the access token and use it to
-  // fetch and render the files in the users root directory.
+  */
+  localStorage.setItem('token', getAccessTokenFromUrl());
+
+  // Crie uma instância do Dropbox com o token de acesso e use-o para
+  // procurar e processar os arquivos no diretório raiz dos usuários.
   var dbx = new Dropbox.Dropbox({ accessToken: getAccessTokenFromUrl() });
   dbx.filesListFolder({path: ''})
     .then(function(response) {
@@ -38,50 +49,46 @@ if (isAuthenticated()) {
     });
 
     function displayFiles(files) {
-      var filesList = document.getElementById('files');
+      var filesList = document.getElementById('file');
       var li;
       for (var i = 0; i < files.length; i++) {
-        li = document.createElement('li');
+        console.log('files');
+        li = document.createElement('tr');
         li.appendChild(document.createTextNode(files[i].name));
         filesList.appendChild(li);
       }
     }
 } else {
+  // Se não estiver autênticado.
   showPageSection('pre-auth-section');
-  // Set the login anchors href using dbx.getAuthenticationUrl()
+  // Defina o href das âncoras de login usando dbx.getAuthenticationUrl()
   var dbx = new Dropbox.Dropbox({ clientId: CLIENT_ID });
-  var authUrl = dbx.getAuthenticationUrl('http://localhost/notesapp/');
+  var authUrl = dbx.getAuthenticationUrl(WEB_SITE_URL);
   document.getElementById('authlink').href = authUrl;
 }
 
-function download(filename, text) {
+// Render a list of items to #files
+function renderItems(items) {
+  var filesContainer = document.getElementById('file');
+  items.forEach(function(item) {
+    var li = document.createElement('tr');
+    li.innerHTML = '<td>'+item.name+'</td>'+'<td>'+item.server_modified+'</td>';
+    filesContainer.appendChild(li);
+  });
+}
+
+// Aqui estamos criando um arquivo .txt para salvar no dropbox
+function makeFileText(filename, text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + utf8_encode(text));
-  /*element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);*/
   return element;
 }
 
-// Start file download.
-
-
+// Aqui estamos fazendo o upload do arquivo .txt para o dropbox
 function uploadFile() {
   var ACCESS_TOKEN = getAccessTokenFromUrl();
   var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-  /*var fileInput = document.getElementById('file-upload');
-  var file = fileInput.files[0];*/
-
-
-
-
-
-  dbx.filesUpload({path: '/' + 'hello5.text', contents: download("hello.txt","This is the content of my file :)")})
+  dbx.filesUpload({path: '/' + 'hello5.text', contents: makeFileText("hello.txt","This is the content of my file :)")})
     .then(function(response) {
       var results = document.getElementById('results');
       results.appendChild(document.createTextNode('File uploaded!'));
