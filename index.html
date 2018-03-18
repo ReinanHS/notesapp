@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dropbox JavaScript SDK</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  
+</head>
+<body>
+  <div class="container main">
+    <div id="pre-auth-section" style="display:none;">
+      <p>This example takes the user through Dropbox's API OAuth flow using <code>Dropbox.getAuthenticationUrl()</code> method [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#getAuthenticationUrl">docs</a>] and then uses the generated access token to list the contents of their root directory.</p>
+      <a href="" id="authlink" class="btn btn-sucess">Login</a>
+      <p class="info">Once authenticated, it will use the access token to list the files in your root directory.</p>
+    </div>
+
+    <div id="authed-section" style="display:none;">
+      <p>You have successfully authenticated. Below are the contents of your root directory. They were fetched using the SDK and access token.</p>
+      <ul id="files"></ul>
+      <section class="container main">
+          <p>This example shows how to use the <code>Dropbox.filesUpload()</code> [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#filesUpload">docs</a>] method to upload a file.</p>
+
+          <form onSubmit="return uploadFile()">
+            <input type="text" id="access-token" placeholder="Access token" />
+            <input type="file" id="file-upload" />
+            <button type="submit">Submit</button>
+          </form>
+
+          <!-- A place to show the status of the upload -->
+          <h2 id="results"></h2>
+
+          <p class="info">To obtain an access token for quick testing, you can go to <a href="https://dropbox.github.io/dropbox-api-v2-explorer/#files_list_folder" target="_blank">API Explorer</a> click the "Get Token" button on the top right, copy the token it creates and then paste it here.</p>
+      </section>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+  <script src="node_modules/dropbox/dist/Dropbox-sdk.min.js"></script>
+  <script src="node_modules/dropbox/dist/utils.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>   
