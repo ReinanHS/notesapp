@@ -46,19 +46,44 @@
 
     <div id="authed-section" style="display:none;">
 
+      <div class="container">
+        <div class="row">
 
-      <table class="table table-dark">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Modified</th>
-          </tr>
-        </thead>
-        <tbody id="file"></tbody>
-      </table>
+          <div class="col-12">
 
+            <div class="span3 well">
+                <center>
+                  <br>
+                  <img src="https://s3-eu-west-1.amazonaws.com/jinc/app/uploads/2017/07/26131014/default-person-300x300.jpg" alt="Foto de perfil." class="img-circle" width="140" height="140" id="myProfile-img">
+                  <h3 id="myProfile-name">Usuário Do Notesapp</h3>
+                  <em id="myProfile-email">usuario@notesapp.com.br</em>
+                </center>
+            </div>
+            
+          </div>
 
+          <div class="col-12">
+            <center>
+              <h1>Meus Arquivos</h1>
+            </center>
+            <hr>
+          </div>
 
+          <div class="col-md-12 center">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Modified</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="file"></tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
 
     </div>
 
@@ -88,14 +113,11 @@
   </div> -->
 
 
-
-
-
-
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
+  <!-- <script src="js/popper.min.js"></script> -->
+  <!-- <script src="js/jquery.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- Dropbox API -->
   <script src="js/polyfill.min.js"></script>

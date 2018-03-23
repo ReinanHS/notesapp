@@ -12,6 +12,29 @@ function getAccessTokenFromUrl() {
     return utils.parseQueryString(window.location.hash).access_token;
   }
 }
+function get_accountDBX(){
+  return jQuery.ajax({
+    url: 'https://api.dropboxapi.com/2/users/get_current_account',
+    type: 'POST',
+    headers: {
+    "Authorization": "Bearer "+getAccessTokenFromUrl()
+    },
+    success: function (data) {
+      /*console.log(data);*/
+      myProfile(data);
+    },
+    error: function (error) {
+      console.log(error);
+    }
+  })
+}
+function myProfile(data){
+  var getUserInfo = data;
+  /*console.log(getUserInfo);*/
+  $('#myProfile-img').attr('src', getUserInfo.profile_photo_url);
+  $('#myProfile-name').html(getUserInfo.name.display_name);
+  $('#myProfile-email').html(getUserInfo.email);
+}
 // Se o usuário acabasse de ser redirecionado da autenticação, o hash da URL
 // Tem o token de acesso.
 function isAuthenticated() {
@@ -36,6 +59,8 @@ if (isAuthenticated()) {
 
   */
   localStorage.setItem('token', getAccessTokenFromUrl());
+
+  get_accountDBX();
 
   // Crie uma instância do Dropbox com o token de acesso e use-o para
   // procurar e processar os arquivos no diretório raiz dos usuários.
@@ -68,11 +93,12 @@ if (isAuthenticated()) {
 }
 
 // Render a list of items to #files
+var ListBtnHTML = '<a class="btn btn-success btn-sm" href="#" role="button"><i class="fas fa-eye"></i> Visualizar</a><a class="btn btn-warning btn-sm" href="#" role="button"><i class="fas fa-edit"></i> Editar</a><a class="btn btn-danger btn-sm" href="#" role="button"><i class="fas fa-trash"></i> Excluir</a>';
 function renderItems(items) {
   var filesContainer = document.getElementById('file');
   items.forEach(function(item) {
     var li = document.createElement('tr');
-    li.innerHTML = '<td>'+item.name+'</td>'+'<td>'+item.server_modified+'</td>';
+    li.innerHTML = '<td>'+item.name+'</td>'+'<td>'+item.server_modified+'</td>'+'<td>'+ListBtnHTML+'</td>';
     filesContainer.appendChild(li);
   });
 }
