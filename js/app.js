@@ -93,35 +93,166 @@ if (isAuthenticated()) {
 }
 
 // Render a list of items to #files
-var ListBtnHTML = '<a class="btn btn-success btn-sm" href="#" role="button"><i class="fas fa-eye"></i> Visualizar</a><a class="btn btn-warning btn-sm" href="#" role="button"><i class="fas fa-edit"></i> Editar</a><a class="btn btn-danger btn-sm" href="#" role="button"><i class="fas fa-trash"></i> Excluir</a>';
 function renderItems(items) {
+  $('#file').html('');
   var filesContainer = document.getElementById('file');
-  items.forEach(function(item) {
-    var li = document.createElement('tr');
-    li.innerHTML = '<td>'+item.name+'</td>'+'<td>'+item.server_modified+'</td>'+'<td>'+ListBtnHTML+'</td>';
-    filesContainer.appendChild(li);
+  var filesItems = items.reverse();
+  filesItems.forEach(function(item) {
+
+    jQuery.ajax({
+      url: 'https://api.dropboxapi.com/2/files/get_temporary_link',
+      type: 'POST',
+      data: JSON.stringify({path: item.path_display}),
+      datatype : "application/json",
+      contentType: "application/json",
+      headers: {
+      "Authorization": "Bearer "+getAccessTokenFromUrl()
+      },
+      success: function (data) {
+        $.getJSON(data.link, function(result){
+          console.log(result);
+
+
+          var deleteFileClick = 'onclick="deleteFile('+String("'"+item.path_display+"'")+','+String("'"+item.name+"'")+')"';
+          var ListBtnHTML = '<a class="btn btn-success btn-sm" href="#" role="button"><i class="fas fa-eye"></i> Visualizar</a><a class="btn btn-warning btn-sm" href="#" role="button"><i class="fas fa-edit"></i> Editar</a><a class="btn btn-danger btn-sm" href="#" role="button" '+deleteFileClick+'><i class="fas fa-trash"></i> Excluir</a>';
+          var li = document.createElement('tr');
+          $(li).attr('style', 'background-color: '+result.color+';');
+
+          li.innerHTML = '<td>'+result.title+'</td>'+'<td>'+item.server_modified+'</td>'+'<td>'+ListBtnHTML+'</td>';
+          filesContainer.appendChild(li);
+
+
+        });
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    })
+
   });
 }
-
-// Aqui estamos criando um arquivo .txt para salvar no dropbox
-function makeFileText(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + utf8_encode(text));
-  return element;
+function renderItemsUpdate(){
+  jQuery.ajax({
+    url: 'https://api.dropboxapi.com/2/files/list_folder',
+    type: 'POST',
+    data: JSON.stringify({path: ''}),
+    datatype : "application/json",
+    contentType: "application/json",
+    headers: {
+    "Authorization": "Bearer "+getAccessTokenFromUrl()
+    },
+    success: function (data) {
+      renderItems(data.entries);
+      /*console.log(data);*/
+    },
+    error: function (error) {
+      console.log(error);
+    }
+  })
 }
-
 // Aqui estamos fazendo o upload do arquivo .txt para o dropbox
-function uploadFile() {
+function uploadFile(data) {
   var ACCESS_TOKEN = getAccessTokenFromUrl();
   var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-  dbx.filesUpload({path: '/' + 'hello5.text', contents: makeFileText("hello.txt","This is the content of my file :)")})
+  dbx.filesUpload({path: '/' + getFileName(), contents: data})
     .then(function(response) {
       var results = document.getElementById('results');
       results.appendChild(document.createTextNode('File uploaded!'));
       console.log(response);
+      renderItemsUpdate();
     })
     .catch(function(error) {
       console.error(error);
+      renderItemsUpdate();
     });
   return false;
 }
+
+function deleteFile(filePath, FileName){
+  $('#modalDeleteFile .modal-body').html('<p>Tem certeza de que quer excluir <b>'+FileName+'</b> do seu Dropbox?</p>');
+  $('#btnDeleteFile').prop( "disabled", false );
+  $('#modalDeleteFile').modal('show');
+
+  $('#btnDeleteFile').click(function(event) {
+    
+    var restul = {
+      path: filePath,
+    }
+
+    var deleteFileLog = jQuery.ajax({
+      url: 'https://api.dropboxapi.com/2/files/delete',
+      type: 'POST',
+      data: JSON.stringify(restul),
+      datatype : "application/json",
+      contentType: "application/json",
+      headers: {
+      "Authorization": "Bearer "+getAccessTokenFromUrl()
+      },
+      success: function (data) {
+        /*console.log(data);*/
+        $('#modalDeleteFile').modal('hide');
+        renderItemsUpdate();
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+
+    /*if(deleteFileLog.path_display == filePath){
+      $('#modalDeleteFile').modal('hide');
+    }
+    else{
+      $('#modalDeleteFile .modal-body').html('<p style="color: red;">Ocorreu um erro ao excluir o arquivo <b>'+FileName+'</b>, tente novamente mais tarde!</p>');
+      $('#btnDeleteFile').prop( "disabled", true );
+    }*/
+    
+  });
+}
+
+function getFileName() {
+    var d = new Date();
+    var n = d.getTime();
+    n = n+'.json';
+    return n;
+}
+
+$('#modalSaveFiles').click(function(event) {
+  /* Act on the event */
+  var errorInput = false;
+
+  if($('#exampleFormControlInput1').val() == ''){
+    $('#exampleFormControlInput1').attr('class', 'form-control is-invalid');
+    errorInput = true;
+  }else{
+    $('#exampleFormControlInput1').attr('class', 'form-control is-valid');
+  }
+
+  if($('#exampleFormControlTextarea1').val() == ''){
+    $('#exampleFormControlTextarea1').attr('class', 'form-control is-invalid');
+    errorInput = true;
+  }else{
+    $('#exampleFormControlTextarea1').attr('class', 'form-control is-valid');
+  }
+
+  if(errorInput == false){
+    var data = {
+      title: $('#exampleFormControlInput1').val(),
+      color: $('#exampleFormControlColor').val(),
+      description: $('#exampleFormControlTextarea1').val(),
+    }
+
+    var jsonData = JSON.stringify(data);
+    uploadFile(jsonData);
+
+    $('#exampleModal').modal('hide');
+
+    $('#exampleFormControlInput1').val('');
+    $('#exampleFormControlInput1').attr('class', 'form-control');
+    $('#exampleFormControlTextarea1').val(''); 
+    $('#exampleFormControlTextarea1').attr('class', 'form-control');
+
+    //console.log(jsonData);
+  }else{
+    console.log(errorInput);
+  }
+});
