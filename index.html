@@ -1,190 +1,48 @@
 <!doctype html>
 <html>
 <head>
-  <!-- Codificação caracteres da página -->
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- SEO Geral -->
-  <title>Notesapp</title>
-  <meta name="description" content="A ferramenta de Notas Notesapp foi projetada com alunos e professores em mente. É uma ferramenta de estudo on-line gratuita que pode ajudá-lo a capturar pensamentos rapidamente e ajudá-lo a aprender.">
-  <link rel="canonical" href="http://localhost/notesapp/">
-  <meta name="author" content="marcosrdac">
-  <meta name="author" content="ReinanHS">
-  <meta name="robots" content="index">
-  
-  <!-- Bootstrap Core CSS -->
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <!-- Custom Fonts -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="shortcut icon" href="img/favicon.ico" />
-  
+  <title>jQuery Mobile Demos</title>
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.mobile-1.4.5.min.js"></script>
+  <script src="js/app.js"></script>
 </head>
 <body>
+  <!-- Start of first page -->
+  <div data-role="page" id="login">
 
-  <div class="main">
+    <div data-role="header">
+      <h1>Login</h1>
+    </div><!-- /header -->
 
-    <div id="pre-auth-section" style="display:none;">
-      <!-- <a href="" id="authlink" class="button">Authenticate</a> -->
+    <div role="main" class="ui-content">
+      <p>O Notesapp é uma plataforma organizacional disponível para Web. Sua função é coletar, organizar e anotar informações anotadas no seu computador, celular, ou até mesmo através do website, e sincronizar tudo isso com um banco de dados virtual só seu dropbox.</p>
+      <a id="loginForDropbox" href="#" class="ui-btn">Login no dropbox</a>
+    </div><!-- /content -->
 
-      <header class="masthead d-flex">
-        <div class="container text-center my-auto">
-          <h1 class="mb-1">Notesapp</h1>
-          <h3 class="mb-5">
-            <em>Suas melhores ideias estão sempre com você e sempre sincronizadas.</em>
-          </h3>
-          <a class="btn btn-primary btn-xl js-scroll-trigger" href="" id="authlink"><i class="fab fa-dropbox"></i> Login pelo dropbox</a>
-        </div>
-        <div class="overlay"></div>
-      </header>
+    <div data-role="footer">
+      <h4>Page Footer</h4>
+    </div><!-- /footer -->
+  </div><!-- /page -->
 
-    </div>
+  <!-- Start of second page -->
+  <div data-role="page" id="authentic">
 
-    <div id="authed-section" style="display:none;">
+    <div data-role="header">
+      <h1>Notesapp</h1>
+    </div><!-- /header -->
 
-      <div class="container">
-        <div class="row">
+    <div role="main" class="ui-content">
+      <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
+    </div><!-- /content -->
 
-          <div class="col-12">
-
-            <div class="span3 well">
-                <center>
-                  <br>
-                  <img src="https://s3-eu-west-1.amazonaws.com/jinc/app/uploads/2017/07/26131014/default-person-300x300.jpg" alt="Foto de perfil." class="img-circle" width="140" height="140" id="myProfile-img">
-                  <h3 id="myProfile-name">Usuário Do Notesapp</h3>
-                  <em id="myProfile-email">usuario@notesapp.com.br</em>
-                </center>
-            </div>
-            
-          </div>
-
-          <div class="col-12">
-            <center>
-              <h1>Meus Arquivos</h1>
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Escrever anotações
-              </button>
-            </center>
-            <hr>
-          </div>
-
-          <div class="col-md-12 center">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Modified</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="file"></tbody>
-            </table>
-          </div>
-          
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Notesapp</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Título</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Estudar para a prova...">
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlColor">Escolha uma cor</label>
-              <input type="color" class="form-control" id="exampleFormControlColor" name="favcolor" value="#FFFFFF">
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlTextarea1">Descrição</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="A ruina do estudante comeca quando a negativa do outro serve de consolo para ele."></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="modalSaveFiles">Salvar alterações</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="modalDeleteFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Excluir arquivo?</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- <p>Tem certeza de que quer excluir <b>1521912826578.json</b> do seu Dropbox?</p> -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" id="btnDeleteFile">Excluir</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-
-  <!-- <div id="authed-section" style="display:none;">
-    <p>You have successfully authenticated. Below are the contents of your root directory. They were fetched using the SDK and access token.</p>
-    <ul id="files"></ul>
-    <section class="container main">
-        <p>This example shows how to use the <code>Dropbox.filesUpload()</code> [<a href="http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#filesUpload">docs</a>] method to upload a file.</p>
-
-        <form onSubmit="return uploadFile()">
-          <input type="text" id="access-token" placeholder="Access token" />
-          <input type="file" id="file-upload" />
-          <button type="submit">Submit</button>
-        </form>
-
-        A place to show the status of the upload
-        <h2 id="results"></h2>
-
-        <p class="info">To obtain an access token for quick testing, you can go to <a href="https://dropbox.github.io/dropbox-api-v2-explorer/#files_list_folder" target="_blank">API Explorer</a> click the "Get Token" button on the top right, copy the token it creates and then paste it here.</p>
-    </section>
-  </div> -->
-
-
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <!-- <script src="js/popper.min.js"></script> -->
-  <!-- <script src="js/jquery.min.js"></script> -->
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- Dropbox API -->
-  <script src="js/polyfill.min.js"></script>
-  <script src="js/fetch.js"></script>
-  <script src="node_modules/dropbox/dist/Dropbox-sdk.min.js"></script>
-  <script src="node_modules/dropbox/dist/utils.js"></script>
-  <!-- Meus scripts JavaScript -->
-  <script src="js/main.js"></script>
-  <script src="js/app.js"></script>
+    <div data-role="footer">
+      <h4>Page Footer</h4>
+    </div><!-- /footer -->
+  </div><!-- /page -->
 </body>
 </html>   
