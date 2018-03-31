@@ -24,25 +24,69 @@
       <a id="loginForDropbox" href="#" class="ui-btn">Login no dropbox</a>
     </div><!-- /content -->
 
+    <div id="loadAuthenticated" style="display: none;">
+      <ul id="list" class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+          <li class="ui-li-has-alt ui-first-child">
+              <a href="#demo-mail" class="ui-btn">
+                  <h3>Avery Walker</h3>
+                  <p class="topic"><strong>Re: Dinner Tonight</strong></p>
+                  <p>Sure, let's plan on meeting at Highland Kitchen at 8:00 tonight. Can't wait! </p>
+                  <p class="ui-li-aside"><strong>4:48</strong>PM</p>
+              </a>
+              <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-a"></a>
+          </li>
+      </ul>
+    </div>
+
+    <div data-role="popup" id="popupMenu" data-theme="b">
+        <ul data-role="listview" data-inset="true" style="min-width:210px;">
+            <li data-role="list-divider">Choose an action</li>
+            <li><a href="#viewCard">View details</a></li>
+            <li><a href="#editCard">Edit</a></li>
+            <li><a href="#">Delete</a></li>
+        </ul>
+    </div>
+
     <div data-role="footer">
-      <h4>Page Footer</h4>
+      <h4>Powered by ReinanHS</h4>
     </div><!-- /footer -->
   </div><!-- /page -->
 
-  <!-- Start of second page -->
-  <div data-role="page" id="authentic">
+  <!-- Start of view card page -->
+  <div data-role="page" id="viewCard">
 
     <div data-role="header">
-      <h1>Notesapp</h1>
+      <h1>Notesapp view</h1>
+      <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
-      <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
+        <h2>View the card post</h2>
     </div><!-- /content -->
 
     <div data-role="footer">
-      <h4>Page Footer</h4>
+      <h4>Powered by ReinanHS</h4>
     </div><!-- /footer -->
   </div><!-- /page -->
+
+  <!-- Start of edit card page -->
+  <div data-role="page" id="editCard">
+
+    <div data-role="header">
+      <h1>Notesapp Edit</h1>
+      <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
+      <a href="#" data-icon="back" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-check ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button">Refresh</a>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <h2>edit de card post</h2>
+    </div><!-- /content -->
+
+    <div data-role="footer">
+      <h4>Powered by ReinanHS</h4>
+    </div><!-- /footer -->
+  </div><!-- /page -->
+
+
 </body>
 </html>   
