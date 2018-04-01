@@ -10,10 +10,38 @@ function getAccessToken() {
             return false;
         }else{
             createBasicStructure(url);
+            saveAccountLocalStorage(url);
             localStorage.setItem('token', url);
             return url;
         }
     }
+}
+function getCurrentAccount(){
+    console.log('Getting current account....');
+    if(localStorage.getItem('account') === null){
+        saveAccountLocalStorage(getAccessToken());
+        return JSON.parse(localStorage.getItem('account'));
+    }else{    
+        return JSON.parse(localStorage.getItem('account'));
+    }
+}
+function saveAccountLocalStorage(token){
+    $.ajax({
+        url: 'https://api.dropboxapi.com/2/users/get_current_account',
+        type: 'POST',
+        headers: {
+        "Authorization": "Bearer "+token,
+        },
+    })
+    .done(function(data) {
+        console.log('Get current account success!');
+        localStorage.setItem('account', JSON.stringify(data));
+    })
+    .fail(function(error) {
+        console.log('Get current account error!');
+        console.log(error);
+    });
+    return false;
 }
 function createBasicStructure(token){
     console.log('Calling function createBasicStructure...');
