@@ -10,13 +10,16 @@
   <script src="js/jquery.js"></script>
   <script src="js/jquery.mobile-1.4.5.min.js"></script>
   <script src="js/app.js"></script>
+  <!-- Trumbowyg -->
+  <link rel="stylesheet" href="node_modules/trumbowyg/dist/ui/trumbowyg.min.css">
 </head>
 <body>
   <!-- Start of first page -->
   <div data-role="page" id="login">
 
     <div data-role="header">
-      <h1>Login</h1>
+      <h1>Notesapp</h1>
+      <a href="#popupCreateAnnotation" data-rel="popup" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-edit ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnCreateAnnotation" style="display: none;">Create</a>
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
@@ -47,6 +50,28 @@
         </ul>
     </div>
 
+    <div data-role="popup" id="popupCreateAnnotation" data-theme="a" class="ui-corner-all">
+        <form id="formCreateAnnotation">
+            <div style="padding:10px 20px;">
+                <center>
+                  <h3>Report the title of annotation!</h3>
+                </center>
+                <legend>Title of annotation:</legend>
+                <input name="title" id="un" value="" placeholder="Title of annotation" data-theme="a" type="text" required="">
+                <label for="date">Date:</label>
+                <input name="date" id="date" value="" type="date" required="">
+                <fieldset data-role="controlgroup">
+                    <legend>Select the type of annotation:</legend>
+                        <input name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked" type="radio">
+                        <label for="radio-choice-1">Normal</label>
+                        <input name="radio-choice-1" id="radio-choice-2" value="choice-2" type="radio">
+                        <label for="radio-choice-2">Latex</label>
+                </fieldset>
+                <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Create annotation</button>
+            </div>
+        </form>
+    </div>
+
     <div data-role="footer">
       <h4>Powered by ReinanHS</h4>
     </div><!-- /footer -->
@@ -75,18 +100,23 @@
     <div data-role="header">
       <h1>Notesapp Edit</h1>
       <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
-      <a href="#" data-icon="back" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-check ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button">Refresh</a>
+      <a href="#" data-icon="back" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-check ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnSaveAnnotation">Save</a>
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
-        <h2>edit de card post</h2>
+        <div id="editNormal">
+          <div id="trumbowyg-demo"></div>
+        </div>
+        <div id="editLatex" style="display: none;">
+          <div id="trumbowyg-latex"></div>
+        </div>
     </div><!-- /content -->
-
     <div data-role="footer">
       <h4>Powered by ReinanHS</h4>
     </div><!-- /footer -->
   </div><!-- /page -->
 
-
+  <!-- Trumbowyg -->
+  <script src="node_modules/trumbowyg/dist/trumbowyg.min.js"></script>
 </body>
 </html>   
