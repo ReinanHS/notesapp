@@ -80,12 +80,14 @@ function getAnnotations(){
             //console.log(annotations.entries[i]);
             if(annotations.entries[i].path_display.slice(annotations.entries[i].path_display.indexOf("."),annotations.entries[i].path_display.length) == '.json'){
                 getTemporaryLink(annotations.entries[i].path_display);
+                getAnnotationJSON(sessionStorage.getItem('annotationLink'));
                 var file = {
                     id: annotations.entries[i].id,
                     name: annotations.entries[i].name,
                     path: annotations.entries[i].path_display,
                     data: annotations.entries[i].server_modified,
                     link: sessionStorage.getItem('annotationLink'),
+                    result: JSON.parse(sessionStorage.getItem('annotationJSON')),
                 }
                 addAnnotations(file, i);
             }else{
@@ -119,6 +121,12 @@ function getTemporaryLink(annotation){
         console.log(error);
     });
     return false;
+}
+function getAnnotationJSON(link){
+    console.log('Getting annotation JSON...');
+    $.getJSON(link, function(result){
+        sessionStorage.setItem('annotationJSON', JSON.stringify(result));  
+    });
 }
 function addAnnotations(annotation, index){
     console.log('Adding the annotation "'+annotation.path+'" in LocalStorage!');
@@ -165,6 +173,17 @@ function createAnnotation(annotation){
     });
     return false;   
 }
+function addViewAnnotation(){
+
+    var annotations = JSON.parse(localStorage.getItem('annotations'));
+    for (var i =  0; i < annotations.length; i++) {
+        $('#loadAuthenticated h3').html(annotations[i].result.title);
+        $('#login .ui-content').html($('#login .ui-content').html()+$('#loadAuthenticated').html());
+        //$('#CardDescription').html(annotations.result.title);
+    }
+
+
+}
 function updateAll(){
     if(localStorage.getItem('annotationsForUpalod') === null || localStorage.getItem('annotationsForUpalod') == ''){
         console.log('annotationsForUpalod is Null');
@@ -202,7 +221,7 @@ $(document).ready(function() {
     if(isAuthenticated()){
         $('#login h1').html('Notesapp');
         $('#login .ui-content').html($('#loadAuthenticated').html());
-        $('#loadAuthenticated').remove();
+        //$('#loadAuthenticated').remove();
         $('#btnCreateAnnotation').show();
     }else{
         $('#loginForDropbox').attr('href', 'https://www.dropbox.com/1/oauth2/authorize?response_type=token&client_id=88mpcrjr1g5q8fo&redirect_uri='+window.location);
