@@ -201,16 +201,16 @@ function addViewAnnotation(){
         $('#login .ui-content').html('');
         var annotations = JSON.parse(localStorage.getItem('annotations'));
         var months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        var debug = 0;
         for (var i =  0; i <= annotations.length; i++) {
-            $('#debug').attr('data-annotation-id', i);
             $('#loadAuthenticated h3').html(annotations[i].result.title);
             $('#byName').html('BY '+annotations[i].result.name);
             $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
             $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
-            $('#login .ui-content').html($('#login .ui-content').html()+$('#loadAuthenticated').html());
+            $('#login .ui-content').append('<div id="'+i+'" onclick="setView(this);"></div>');
+            $('#'+i).html($('#loadAuthenticated').html());
         }
     }
-
 
 }
 function updateAll(){
@@ -261,6 +261,11 @@ function getDate(){
 
     return data;
 }
+function setView(index){
+    var id = $(index).attr('id');
+    var annotations = JSON.parse(localStorage.getItem('annotations'));
+    $('#viewCard .ui-content').html(annotations[id].result.annotation);
+}
 function isAuthenticated(){
     return !!getAccessToken();
 }
@@ -268,7 +273,6 @@ $(document).ready(function() {
     if(isAuthenticated()){
         $('#login h1').html('Notesapp');
         $('#login .ui-content').html('');
-        //$('#loadAuthenticated').remove();
         $('#btnCreateAnnotation').show();
         $('#btnReloadAnnotation').show();
     }else{
