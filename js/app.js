@@ -264,7 +264,17 @@ function getDate(){
 function setView(index){
     var id = $(index).attr('id');
     var annotations = JSON.parse(localStorage.getItem('annotations'));
-    $('#viewCard .ui-content').html(annotations[id].result.annotation);
+    if(annotations[id].result.type == 'choice-1'){
+        $('#viewCard .ui-content').html(annotations[id].result.annotation);
+        $('#editNormal').show();
+        $('#editLatex').hide();
+        $('#trumbowyg-demo').trumbowyg('html', annotations[id].result.annotation);
+    }else if(annotations[id].result.type == 'choice-2'){
+        $('#viewCard .ui-content').html('<div lang="latex">'+annotations[id].result.annotation+'</div>');
+        $('#editNormal').hide();
+        $('#editLatex').show();
+        $('#trumbowyg-latex').trumbowyg('html', annotations[id].result.annotation);
+    } 
 }
 function isAuthenticated(){
     return !!getAccessToken();
