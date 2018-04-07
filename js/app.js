@@ -91,7 +91,7 @@ function create_folder(folder, token){
     return false;
 }
 function getAnnotations(){
-    console.log('Search the annotations...');
+    //console.log('Search the annotations...');
     localStorage.setItem('annotations', '');
     $.ajax({
         url: 'https://api.dropboxapi.com/2/files/list_folder',
@@ -104,20 +104,10 @@ function getAnnotations(){
         },
     }).done(function(annotations) {
         console.log(annotations.entries.length+' files find with success!');
-        for (var i =  0; i < annotations.entries.length; i++) {
+        for (var i = 0; i < annotations.entries.length; i++){
             //console.log(annotations.entries[i]);
             if(annotations.entries[i].path_display.slice(annotations.entries[i].path_display.indexOf("."),annotations.entries[i].path_display.length) == '.json'){
-                getTemporaryLink(annotations.entries[i].path_display);
-                getAnnotationJSON(sessionStorage.getItem('annotationLink'));
-                var file = {
-                    id: annotations.entries[i].id,
-                    name: annotations.entries[i].name,
-                    path: annotations.entries[i].path_display,
-                    data: annotations.entries[i].server_modified,
-                    link: sessionStorage.getItem('annotationLink'),
-                    result: JSON.parse(sessionStorage.getItem('annotationJSON')),
-                }
-                addAnnotations(file, i);
+                loadAnnotationAJAX(annotations.entries[i], i);
             }else{
                 console.log('The file "'+annotations.entries[i].path_display+'" not is a json');
             }
@@ -130,31 +120,34 @@ function getAnnotations(){
     });
     return false; 
 }
-function getTemporaryLink(annotation){
-    console.log('Getting the link of annotation....');
+function loadAnnotationAJAX(annotation, index){
     $.ajax({
         url: 'https://api.dropboxapi.com/2/files/get_temporary_link',
         type: 'POST',
-        data: JSON.stringify({path: annotation}),
+        data: JSON.stringify({path: annotation.path_display}),
         datatype : "application/json",
         contentType: "application/json",
         headers: {
         "Authorization": "Bearer "+getAccessToken()
         },
     }).done(function(data) {
-        console.log('Get "'+annotation+'" link of annotations with success!');
-        sessionStorage.setItem('annotationLink', data.link);
+        $.getJSON(data.link, function(result){
+            var file = {
+                id: annotation.id,
+                name: annotation.name,
+                path: annotation.path_display,
+                data: annotation.server_modified,
+                link: data.link,
+                result: result,
+            }
+
+            addAnnotations(file, index);
+            addViewAnnotation();
+        });
     })
     .fail(function(error) {
         console.log('Error on getting link of annotation!');
         console.log(error);
-    });
-    return false;
-}
-function getAnnotationJSON(link){
-    console.log('Getting annotation JSON...');
-    $.getJSON(link, function(result){
-        sessionStorage.setItem('annotationJSON', JSON.stringify(result));  
     });
 }
 function addAnnotations(annotation, index){
@@ -203,34 +196,40 @@ function createAnnotation(annotation){
     return false;   
 }
 function addViewAnnotation(){
-
-    var annotations = JSON.parse(localStorage.getItem('annotations'));
-    var months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
     
-    for (var i =  0; i < annotations.length; i++) {
-        $('#getAnnotationID').attr('data-annotation-id', i);
-        $('#loadAuthenticated h3').html(annotations[i].result.title.slice(0,40));
-        $('#byName').html('BY '+annotations[i].result.name);
-        $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
-        $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
-        $('#login .ui-content').html($('#login .ui-content').html()+$('#loadAuthenticated').html());
-        //$('#CardDescription').html(annotations.result.title);
+    if(localStorage.getItem('annotations') != ""){
+        $('#login .ui-content').html('');
+        var annotations = JSON.parse(localStorage.getItem('annotations'));
+        var months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        for (var i =  0; i <= annotations.length; i++) {
+            $('#debug').attr('data-annotation-id', i);
+            $('#loadAuthenticated h3').html(annotations[i].result.title);
+            $('#byName').html('BY '+annotations[i].result.name);
+            $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
+            $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
+            $('#login .ui-content').html($('#login .ui-content').html()+$('#loadAuthenticated').html());
+        }
     }
 
 
 }
 function updateAll(){
-    if(localStorage.getItem('annotationsForUpalod') === null || localStorage.getItem('annotationsForUpalod') == ''){
-        console.log('annotationsForUpalod is Null');
-    }
-    else{
-        var upload = JSON.parse(localStorage.getItem('annotationsForUpalod'));
-        for (var i =  0; i < upload.length; i++) {
-            createAnnotation(upload[i]);
+    if(navigator.onLine){
+        if(localStorage.getItem('annotationsForUpalod') === null || localStorage.getItem('annotationsForUpalod') == ''){
+            console.log('annotationsForUpalod is Null');
         }
-        localStorage.setItem('annotationsForUpalod', '');
+        else{
+            var upload = JSON.parse(localStorage.getItem('annotationsForUpalod'));
+            for (var i =  0; i < upload.length; i++) {
+                createAnnotation(upload[i]);
+            }
+            localStorage.setItem('annotationsForUpalod', '');
+        }
+        getAnnotations();
+    }else{
+        $('#login .ui-content').html($('#login .ui-content').html()+$('#offline-info').html());
+        addViewAnnotation();
     }
-    getAnnotations();
     return false;
 }
 function getFileName(){
@@ -271,6 +270,7 @@ $(document).ready(function() {
         $('#login .ui-content').html('');
         //$('#loadAuthenticated').remove();
         $('#btnCreateAnnotation').show();
+        $('#btnReloadAnnotation').show();
     }else{
         $('#loginForDropbox').attr('href', 'https://www.dropbox.com/1/oauth2/authorize?response_type=token&client_id=88mpcrjr1g5q8fo&redirect_uri='+window.location);
     }
@@ -343,14 +343,15 @@ $(document).ready(function() {
             if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
                 //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
                 addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
+                sessionStorage.clear('newAnnotation');
             }else{
                 var annotations = JSON.parse(localStorage.getItem('annotations'));
                 //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
                 addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
+                sessionStorage.clear('newAnnotation');
             }
         }
         $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
         updateAll();
     });
-
 });

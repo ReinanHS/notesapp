@@ -20,7 +20,7 @@
     <div data-role="header">
       <h1>Notesapp</h1>
       <a href="#popupCreateAnnotation" data-rel="popup" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-edit ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnCreateAnnotation" style="display: none;">Create</a>
-      <!-- <a href="#" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-back ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnCreateAnnotation">Reload</a> -->
+      <a href="#" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-back ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnReloadAnnotation" style="display: none;" onclick="updateAll();">Reload</a>
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
@@ -37,7 +37,7 @@
                   <p id="CardDescription">Sure, let's plan on meeting at Highland Kitchen at 8:00 tonight. Can't wait! </p>
                   <p class="ui-li-aside" id="cardData"><strong>4:48</strong>PM</p>
               </a>
-              <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-a" id="getAnnotationID"></a>
+              <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-a"><div id="debug"></div></a>
           </li>
       </ul>
     </div>
