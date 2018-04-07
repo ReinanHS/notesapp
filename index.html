@@ -20,6 +20,7 @@
     <div data-role="header">
       <h1>Notesapp</h1>
       <a href="#popupCreateAnnotation" data-rel="popup" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-edit ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnCreateAnnotation" style="display: none;">Create</a>
+      <!-- <a href="#" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-back ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnCreateAnnotation">Reload</a> -->
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
@@ -32,11 +33,11 @@
           <li class="ui-li-has-alt ui-first-child">
               <a href="#demo-mail" class="ui-btn">
                   <h3>Avery Walker</h3>
-                  <p class="topic"><strong>Re: Dinner Tonight</strong></p>
+                  <p class="topic"><strong id="byName">Re: Dinner Tonight</strong></p>
                   <p id="CardDescription">Sure, let's plan on meeting at Highland Kitchen at 8:00 tonight. Can't wait! </p>
-                  <p class="ui-li-aside"><strong>4:48</strong>PM</p>
+                  <p class="ui-li-aside" id="cardData"><strong>4:48</strong>PM</p>
               </a>
-              <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-a"></a>
+              <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-a" id="getAnnotationID"></a>
           </li>
       </ul>
     </div>
@@ -48,6 +49,18 @@
             <li><a href="#editCard">Edit</a></li>
             <li><a href="#">Delete</a></li>
         </ul>
+    </div>
+
+    <div id="offline-info" style="display: none;">
+      <ul id="list" class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+          <li class="ui-li-has-alt ui-first-child">
+              <div id="ui-bar-test" class="ui-bar ui-corner-all ui-bar-a" style="margin-bottom:1em;">
+                <h3 style="color: red;">Você está no modo offline!</h3>
+                <p>Todos os arquivos serão enviados para o servidor no momento em que você volta a se conectar com a internet</p>
+                <button class="ui-btn" onclick="location.reload();">Atualizar</button>
+              </div>
+          </li>
+      </ul>
     </div>
 
     <div data-role="popup" id="popupCreateAnnotation" data-theme="a" class="ui-corner-all">

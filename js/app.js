@@ -122,6 +122,7 @@ function getAnnotations(){
                 console.log('The file "'+annotations.entries[i].path_display+'" not is a json');
             }
         }
+        addViewAnnotation();
     })
     .fail(function(error) {
         console.log('Error on search the annotations!');
@@ -204,8 +205,14 @@ function createAnnotation(annotation){
 function addViewAnnotation(){
 
     var annotations = JSON.parse(localStorage.getItem('annotations'));
+    var months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    
     for (var i =  0; i < annotations.length; i++) {
-        $('#loadAuthenticated h3').html(annotations[i].result.title);
+        $('#getAnnotationID').attr('data-annotation-id', i);
+        $('#loadAuthenticated h3').html(annotations[i].result.title.slice(0,40));
+        $('#byName').html('BY '+annotations[i].result.name);
+        $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
+        $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
         $('#login .ui-content').html($('#login .ui-content').html()+$('#loadAuthenticated').html());
         //$('#CardDescription').html(annotations.result.title);
     }
@@ -242,26 +249,52 @@ function getFileName(){
         return name;
     }
 }
+function getDate(){
+    var d = new Date();
+    var data = {
+        year: d.getUTCFullYear(),
+        month: d.getMonth(),
+        day: d.getDay(),
+        hours: d.getHours(),
+        minutes: d.getMinutes(),
+        seconds: d.getSeconds(), 
+    };
+
+    return data;
+}
 function isAuthenticated(){
     return !!getAccessToken();
 }
 $(document).ready(function() {
     if(isAuthenticated()){
         $('#login h1').html('Notesapp');
-        $('#login .ui-content').html($('#loadAuthenticated').html());
+        $('#login .ui-content').html('');
         //$('#loadAuthenticated').remove();
         $('#btnCreateAnnotation').show();
     }else{
         $('#loginForDropbox').attr('href', 'https://www.dropbox.com/1/oauth2/authorize?response_type=token&client_id=88mpcrjr1g5q8fo&redirect_uri='+window.location);
     }
 
+    if(navigator.onLine){
+        updateAll();
+    }else{
+        $('#login .ui-content').html($('#login .ui-content').html()+$('#offline-info').html());
+        addViewAnnotation();
+    }
+
     $('#formCreateAnnotation').submit(function(event) {
         /* Act on the event */
+        var userName = getCurrentAccount();
+        if(userName == null){
+            userName = getCurrentAccount();
+        }
         var annotation = {
             title: $('#un').val().replace(/<\/?[^>]+(>|$)/g, ""),
             date: $('#date').val(),
+            name: userName.name.display_name,
             type: $( "#formCreateAnnotation input[type='radio']:checked" ).val(),
             path: getFileName(),
+            createDete: getDate(),
         }
         sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
         if(annotation.type == 'choice-1'){
@@ -301,9 +334,9 @@ $(document).ready(function() {
             alert('Error ao salvar');
         }else{
             if(annotation.type == "choice-1"){
-                annotation.html = $('#trumbowyg-demo').trumbowyg('html');
+                annotation.annotation = $('#trumbowyg-demo').trumbowyg('html');
             }else if(annotation.type == "choice-2"){
-                annotation.latex = $('#trumbowyg-latex').trumbowyg('html');
+                annotation.annotation = $('#trumbowyg-latex').trumbowyg('html');
             }
             sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
 
