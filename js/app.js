@@ -187,7 +187,7 @@ function addAnnotationsForDelete(annotation){
     }
 }
 function createAnnotation(annotation){
-    //console.log('Creating annotation....');
+    console.log('Creating annotation....');
     $.ajax({
         url: 'https://content.dropboxapi.com/2/files/alpha/upload',
         type: 'POST',
@@ -199,11 +199,11 @@ function createAnnotation(annotation){
         "Dropbox-API-Arg": JSON.stringify({path: annotation.path}),
         },
     }).done(function(data) {
-        //console.log('annotation create with success!');
+        console.log('annotation create with success!');
     })
     .fail(function(error) {
-        //console.log('Error on getting link of annotation!');
-        //console.log(error);
+        console.log('Error on getting link of annotation!');
+        console.log(error);
     });
     return false;   
 }
@@ -236,6 +236,7 @@ function addViewAnnotation(){
         var months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
         var debug = 0;
         for (var i =  0; i <= annotations.length; i++) {
+            console.log(annotations[i]);
             $('#loadAuthenticated h3').html(annotations[i].result.title);
             $('#byName').html('BY '+annotations[i].result.name);
             $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
@@ -441,23 +442,42 @@ $(document).ready(function() {
             $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
             updateAll();
         }else if(sessionStorage.getItem('actionType') == 'edit'){
+
+
+            if(annotation.result.type == "choice-1"){
+                annotation.result.annotation = $('#trumbowyg-demo').trumbowyg('html');
+            }else if(annotation.result.type == "choice-2"){
+                annotation.result.annotation = $('#trumbowyg-latex').trumbowyg('html');
+            }
+            sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
+
+            var index = sessionStorage.getItem('indexAnnotation');
+            var annotations = JSON.parse(localStorage.getItem('annotations'));
+            delete annotations[index];
+            annotations[index] = annotation;
+            localStorage.setItem('annotations', JSON.stringify(annotations));
+
+            $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+
+            console.log(annotation.result.annotation);
+            console.log(JSON.parse(sessionStorage.getItem('newAnnotation')));
+            console.log(JSON.parse(localStorage.getItem('annotations')));
+
             if(annotation == null){
                 alert('Error ao salvar');
             }else{
                 if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
                     addAnnotationsForDelete(annotation.path);
-                    //addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
-                    sessionStorage.clear('newAnnotation');
+                    addAnnotationsForUpalod(annotation.result, 0);
                 }else{
                     var annotations = JSON.parse(localStorage.getItem('annotations'));
                     addAnnotationsForDelete(annotation.path);
-                    //addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
-                    sessionStorage.clear('newAnnotation');
+                    addAnnotationsForUpalod(annotation.result, (annotations.length+1));
                 }
 
             }
-            $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
-            updateAll();
+            sessionStorage.clear('newAnnotation');
+            addViewAnnotation();
         }
     });
 
