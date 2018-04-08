@@ -244,7 +244,7 @@ function addViewAnnotation(){
             $('#'+i).html($('#loadAuthenticated').html());
         }
     }else{
-        $('#login .ui-content').append($('#createAnnotationInfo').html());
+        $('#login .ui-content').html($('#createAnnotationInfo').html());
     }
 
 }
@@ -271,7 +271,7 @@ function updateAll(){
                 console.log('delete');
                 deleteAnnotation(annotationDelete[i]);
             }
-            localStorage.setItem('annotationsForDelete', null);
+            localStorage.setItem('addAnnotationsForDelete', null);
         }
         getAnnotations();
     }else{
@@ -298,7 +298,7 @@ function getFileName(){
 }
 function getDate(){
     var d = new Date();
-    var data = {
+    var CreateDate = {
         year: d.getUTCFullYear(),
         month: d.getMonth(),
         day: d.getDay(),
@@ -306,8 +306,7 @@ function getDate(){
         minutes: d.getMinutes(),
         seconds: d.getSeconds(), 
     };
-
-    return data;
+    return CreateDate;
 }
 function setView(index){
     var id = $(index).attr('id');
@@ -324,6 +323,7 @@ function setView(index){
         $('#editLatex').show();
         $('#trumbowyg-latex').trumbowyg('html', annotations[id].result.annotation);
     }
+    sessionStorage.setItem('indexAnnotation', id);
     sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
     sessionStorage.setItem('actionType', 'edit');
 }
@@ -349,19 +349,33 @@ $(document).ready(function() {
 
     $('#formCreateAnnotation').submit(function(event) {
         /* Act on the event */
+        sessionStorage.clear('newAnnotation');
+        sessionStorage.setItem('actionType', 'create');
         var userName = getCurrentAccount();
         if(userName == null){
             userName = getCurrentAccount();
         }
+
+        var d = new Date();
+        var CreateDate = {
+            year: d.getUTCFullYear(),
+            month: d.getMonth(),
+            day: d.getDay(),
+            hours: d.getHours(),
+            minutes: d.getMinutes(),
+            seconds: d.getSeconds(), 
+        };
+
         var annotation = {
             title: $('#un').val().replace(/<\/?[^>]+(>|$)/g, ""),
             date: $('#date').val(),
             name: userName.name.display_name,
             type: $( "#formCreateAnnotation input[type='radio']:checked" ).val(),
             path: getFileName(),
-            createDete: getDate(),
+            createDete: CreateDate,
         }
         sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
+
         if(annotation.type == 'choice-1'){
             $('#editNormal').show();
             $('#editLatex').hide();
@@ -369,8 +383,8 @@ $(document).ready(function() {
             $('#editNormal').hide();
             $('#editLatex').show();
         }
+
         $.mobile.changePage( "#editCard", { transition: "slideup", changeHash: false });
-        sessionStorage.setItem('actionType', 'create');
         return false;
     });
 
@@ -439,5 +453,18 @@ $(document).ready(function() {
             $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
             updateAll();
         }
+    });
+
+    $('#btnDeleteAnnotation').click(function(event) {
+
+        var annotations = JSON.parse(localStorage.getItem('annotations'));
+        var index = annotations.indexOf(sessionStorage.getItem('indexAnnotation'));
+        var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
+        if (index > -1) {
+            annotations.splice(index, 1);
+        }
+        addAnnotationsForDelete(annotation.path);
+        addViewAnnotation();
+        $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
     });
 });
