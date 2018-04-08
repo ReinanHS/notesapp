@@ -175,8 +175,8 @@ function addAnnotationsForUpalod(annotation, index){
     }
 }
 function addAnnotationsForDelete(annotation){
-    //console.log('Adding the annotation for delete: "'+annotation+'" in LocalStorage!');
-    if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == ''){
+    console.log('Adding the annotation for delete: "'+annotation+'" in LocalStorage!');
+    if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == 'null'){
         var annotations = [];
         annotations[0] = annotation;
         localStorage.setItem('addAnnotationsForDelete', JSON.stringify(annotations));
@@ -262,7 +262,7 @@ function updateAll(){
         }
 
 
-        if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == ''){
+        if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == 'null'){
             console.log('annotationsForDelete is Null');
         }
         else{
@@ -456,15 +456,13 @@ $(document).ready(function() {
     });
 
     $('#btnDeleteAnnotation').click(function(event) {
-
         var annotations = JSON.parse(localStorage.getItem('annotations'));
-        var index = annotations.indexOf(sessionStorage.getItem('indexAnnotation'));
         var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
-        if (index > -1) {
-            annotations.splice(index, 1);
-        }
-        addAnnotationsForDelete(annotation.path);
+        delete annotations[sessionStorage.getItem('indexAnnotation')];
+        localStorage.setItem('annotations', JSON.stringify(annotations));
         addViewAnnotation();
-        $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+        console.log(annotation.path);
+        addAnnotationsForDelete(annotation.path);
+        //$.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
     });
 });
