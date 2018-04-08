@@ -65,6 +65,18 @@
       </ul>
     </div>
 
+    <div id="createAnnotationInfo" style="display: none;">
+      <ul id="list" class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+          <li class="ui-li-has-alt ui-first-child">
+              <div id="ui-bar-test" class="ui-bar ui-corner-all ui-bar-a" style="margin-bottom:1em;">
+                <h3 style="color: red;">Você ainda não criou nenhuma anotação!</h3>
+                <p>Vamos criar a sua primeira anotação? Você só tem que clicar no botão abaixo para criar a sua anotação</p>
+                <a href="#popupCreateAnnotation" data-rel="popup" class="ui-btn">Criar anotação</a>
+              </div>
+          </li>
+      </ul>
+    </div>
+
     <div data-role="popup" id="popupCreateAnnotation" data-theme="a" class="ui-corner-all">
         <form id="formCreateAnnotation">
             <div style="padding:10px 20px;">

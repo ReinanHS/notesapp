@@ -17,7 +17,7 @@ function getAccessToken() {
     }
 }
 function getCurrentAccount(){
-    console.log('Getting current account....');
+    //console.log('Getting current account....');
     if(localStorage.getItem('account') === null){
         saveAccountLocalStorage(getAccessToken());
         return JSON.parse(localStorage.getItem('account'));
@@ -34,17 +34,17 @@ function saveAccountLocalStorage(token){
         },
     })
     .done(function(data) {
-        console.log('Get current account success!');
+        //console.log('Get current account success!');
         localStorage.setItem('account', JSON.stringify(data));
     })
     .fail(function(error) {
-        console.log('Get current account error!');
-        console.log(error);
+        //console.log('Get current account error!');
+        //console.log(error);
     });
     return false;
 }
 function createBasicStructure(token){
-    console.log('Calling function createBasicStructure...');
+    //console.log('Calling function createBasicStructure...');
     $.ajax({
         url: 'https://api.dropboxapi.com/2/files/list_folder',
         type: 'POST',
@@ -59,14 +59,14 @@ function createBasicStructure(token){
         if(data.entries.length == 0){
             create_folder('/annotations', token);
             create_folder('/myFiles', token);
-            console.log('Creating the folders...');
+            //console.log('Creating the folders...');
         }else{
-            console.log('Folders already exist!');
+            //console.log('Folders already exist!');
         }
     })
     .fail(function(error) {
-        console.log('Create basic structure: error');
-        console.log(error);
+        //console.log('Create basic structure: error');
+        //console.log(error);
     });
 
     return false;
@@ -82,16 +82,16 @@ function create_folder(folder, token){
         "Authorization": "Bearer "+token
         },
     }).done(function(data) {
-        console.log('Folder "'+folder+'" created with success!');
+        //console.log('Folder "'+folder+'" created with success!');
     })
     .fail(function(error) {
-        console.log('Create basic structure: error');
-        console.log(error);
+        //console.log('Create basic structure: error');
+        //console.log(error);
     });
     return false;
 }
 function getAnnotations(){
-    //console.log('Search the annotations...');
+    ////console.log('Search the annotations...');
     localStorage.setItem('annotations', '');
     $.ajax({
         url: 'https://api.dropboxapi.com/2/files/list_folder',
@@ -103,20 +103,20 @@ function getAnnotations(){
         "Authorization": "Bearer "+getAccessToken()
         },
     }).done(function(annotations) {
-        console.log(annotations.entries.length+' files find with success!');
+        //console.log(annotations.entries.length+' files find with success!');
         for (var i = 0; i < annotations.entries.length; i++){
-            //console.log(annotations.entries[i]);
+            ////console.log(annotations.entries[i]);
             if(annotations.entries[i].path_display.slice(annotations.entries[i].path_display.indexOf("."),annotations.entries[i].path_display.length) == '.json'){
                 loadAnnotationAJAX(annotations.entries[i], i);
             }else{
-                console.log('The file "'+annotations.entries[i].path_display+'" not is a json');
+                //console.log('The file "'+annotations.entries[i].path_display+'" not is a json');
             }
         }
         addViewAnnotation();
     })
     .fail(function(error) {
-        console.log('Error on search the annotations!');
-        console.log(error);
+        //console.log('Error on search the annotations!');
+        //console.log(error);
     });
     return false; 
 }
@@ -146,12 +146,12 @@ function loadAnnotationAJAX(annotation, index){
         });
     })
     .fail(function(error) {
-        console.log('Error on getting link of annotation!');
-        console.log(error);
+        //console.log('Error on getting link of annotation!');
+        //console.log(error);
     });
 }
 function addAnnotations(annotation, index){
-    console.log('Adding the annotation "'+annotation.path+'" in LocalStorage!');
+    //console.log('Adding the annotation "'+annotation.path+'" in LocalStorage!');
     if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
         var annotations = [];
         annotations[0] = annotation;
@@ -163,7 +163,7 @@ function addAnnotations(annotation, index){
     }
 }
 function addAnnotationsForUpalod(annotation, index){
-    console.log('Adding the annotation for upalod: "'+annotation.path+'" in LocalStorage!');
+    //console.log('Adding the annotation for upalod: "'+annotation.path+'" in LocalStorage!');
     if(localStorage.getItem('annotationsForUpalod') === null || localStorage.getItem('annotationsForUpalod') == ''){
         var annotations = [];
         annotations[0] = annotation;
@@ -174,8 +174,20 @@ function addAnnotationsForUpalod(annotation, index){
         localStorage.setItem('annotationsForUpalod', JSON.stringify(annotations));
     }
 }
+function addAnnotationsForDelete(annotation){
+    //console.log('Adding the annotation for delete: "'+annotation+'" in LocalStorage!');
+    if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == ''){
+        var annotations = [];
+        annotations[0] = annotation;
+        localStorage.setItem('addAnnotationsForDelete', JSON.stringify(annotations));
+    }else{
+        var annotations = JSON.parse(localStorage.getItem('addAnnotationsForDelete'));
+        annotations[annotations.length+1] = annotation;
+        localStorage.setItem('addAnnotationsForDelete', JSON.stringify(annotations));
+    }
+}
 function createAnnotation(annotation){
-    console.log('Creating annotation....');
+    //console.log('Creating annotation....');
     $.ajax({
         url: 'https://content.dropboxapi.com/2/files/alpha/upload',
         type: 'POST',
@@ -187,13 +199,34 @@ function createAnnotation(annotation){
         "Dropbox-API-Arg": JSON.stringify({path: annotation.path}),
         },
     }).done(function(data) {
-        console.log('annotation create with success!');
+        //console.log('annotation create with success!');
     })
     .fail(function(error) {
-        console.log('Error on getting link of annotation!');
-        console.log(error);
+        //console.log('Error on getting link of annotation!');
+        //console.log(error);
     });
     return false;   
+}
+function deleteAnnotation(annotation){
+    console.log('Deleting annotation....');
+    $.ajax({
+        url: 'https://api.dropboxapi.com/2/files/delete_v2',
+        type: 'POST',
+        data: JSON.stringify({path: annotation}),
+        datatype : "application/json",
+        contentType: "application/json",
+        headers: {
+        "Authorization": "Bearer "+getAccessToken(),
+        },
+    }).done(function(data) {
+        console.log(data);
+        console.log('annotation delete with success!');
+    })
+    .fail(function(error) {
+        console.log('Error on delet annotation!');
+        console.log(error);
+    });
+    return false;    
 }
 function addViewAnnotation(){
     
@@ -210,6 +243,8 @@ function addViewAnnotation(){
             $('#login .ui-content').append('<div id="'+i+'" onclick="setView(this);"></div>');
             $('#'+i).html($('#loadAuthenticated').html());
         }
+    }else{
+        $('#login .ui-content').append($('#createAnnotationInfo').html());
     }
 
 }
@@ -225,6 +260,19 @@ function updateAll(){
             }
             localStorage.setItem('annotationsForUpalod', '');
         }
+
+
+        if(localStorage.getItem('addAnnotationsForDelete') === null || localStorage.getItem('addAnnotationsForDelete') == ''){
+            console.log('annotationsForDelete is Null');
+        }
+        else{
+            var annotationDelete = JSON.parse(localStorage.getItem('addAnnotationsForDelete'));
+            for (var i =  0; i < annotationDelete.length; i++) {
+                console.log('delete');
+                deleteAnnotation(annotationDelete[i]);
+            }
+            localStorage.setItem('annotationsForDelete', null);
+        }
         getAnnotations();
     }else{
         $('#login .ui-content').html($('#login .ui-content').html()+$('#offline-info').html());
@@ -233,18 +281,18 @@ function updateAll(){
     return false;
 }
 function getFileName(){
-    console.log('Getting name of annotation');
+    //console.log('Getting name of annotation');
     var date = new Date();
     var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
     if(annotation == null){
-        console.log('Name of annotation is '+('/annotations/'+date.getTime()+'.json'));
+        //console.log('Name of annotation is '+('/annotations/'+date.getTime()+'.json'));
         return ('/annotations/'+date.getTime()+'.json');
     }else{
         var name = annotation.title;
         name = name.split(' ').join('');
         name = name.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         name = '/annotations/'+name+'-'+date.getTime()+'.json';
-        console.log('Name of annotation is '+name);
+        //console.log('Name of annotation is '+name);
         return name;
     }
 }
@@ -264,6 +312,7 @@ function getDate(){
 function setView(index){
     var id = $(index).attr('id');
     var annotations = JSON.parse(localStorage.getItem('annotations'));
+    sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
     if(annotations[id].result.type == 'choice-1'){
         $('#viewCard .ui-content').html(annotations[id].result.annotation);
         $('#editNormal').show();
@@ -274,7 +323,9 @@ function setView(index){
         $('#editNormal').hide();
         $('#editLatex').show();
         $('#trumbowyg-latex').trumbowyg('html', annotations[id].result.annotation);
-    } 
+    }
+    sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
+    sessionStorage.setItem('actionType', 'edit');
 }
 function isAuthenticated(){
     return !!getAccessToken();
@@ -319,6 +370,7 @@ $(document).ready(function() {
             $('#editLatex').show();
         }
         $.mobile.changePage( "#editCard", { transition: "slideup", changeHash: false });
+        sessionStorage.setItem('actionType', 'create');
         return false;
     });
 
@@ -344,28 +396,48 @@ $(document).ready(function() {
 
     $('#btnSaveAnnotation').click(function(event) {
         var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
-        if(annotation == null){
-            alert('Error ao salvar');
-        }else{
-            if(annotation.type == "choice-1"){
-                annotation.annotation = $('#trumbowyg-demo').trumbowyg('html');
-            }else if(annotation.type == "choice-2"){
-                annotation.annotation = $('#trumbowyg-latex').trumbowyg('html');
-            }
-            sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
-
-            if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
-                //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
-                addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
-                sessionStorage.clear('newAnnotation');
+        if(sessionStorage.getItem('actionType') == 'create'){
+            if(annotation == null){
+                alert('Error ao salvar');
             }else{
-                var annotations = JSON.parse(localStorage.getItem('annotations'));
-                //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
-                addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
-                sessionStorage.clear('newAnnotation');
+                if(annotation.type == "choice-1"){
+                    annotation.annotation = $('#trumbowyg-demo').trumbowyg('html');
+                }else if(annotation.type == "choice-2"){
+                    annotation.annotation = $('#trumbowyg-latex').trumbowyg('html');
+                }
+                sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
+
+                if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
+                    //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
+                    addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
+                    sessionStorage.clear('newAnnotation');
+                }else{
+                    var annotations = JSON.parse(localStorage.getItem('annotations'));
+                    //addAnnotations(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
+                    addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
+                    sessionStorage.clear('newAnnotation');
+                }
             }
+            $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+            updateAll();
+        }else if(sessionStorage.getItem('actionType') == 'edit'){
+            if(annotation == null){
+                alert('Error ao salvar');
+            }else{
+                if(localStorage.getItem('annotations') === null || localStorage.getItem('annotations') == ''){
+                    addAnnotationsForDelete(annotation.path);
+                    //addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), 0);
+                    sessionStorage.clear('newAnnotation');
+                }else{
+                    var annotations = JSON.parse(localStorage.getItem('annotations'));
+                    addAnnotationsForDelete(annotation.path);
+                    //addAnnotationsForUpalod(JSON.parse(sessionStorage.getItem('newAnnotation')), (annotations.length+1));
+                    sessionStorage.clear('newAnnotation');
+                }
+
+            }
+            $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+            updateAll();
         }
-        $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
-        updateAll();
     });
 });
