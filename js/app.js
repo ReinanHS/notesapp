@@ -327,6 +327,12 @@ function setView(index){
     sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
     sessionStorage.setItem('actionType', 'edit');
 }
+function deleteListAnnotation(){
+    var annotations = JSON.parse(localStorage.getItem('annotations'));
+    delete annotations[sessionStorage.getItem('indexAnnotation')];
+    localStorage.setItem('annotations', JSON.stringify(annotations));
+    addViewAnnotation();
+}
 function isAuthenticated(){
     return !!getAccessToken();
 }
@@ -456,13 +462,9 @@ $(document).ready(function() {
     });
 
     $('#btnDeleteAnnotation').click(function(event) {
-        var annotations = JSON.parse(localStorage.getItem('annotations'));
         var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
-        delete annotations[sessionStorage.getItem('indexAnnotation')];
-        localStorage.setItem('annotations', JSON.stringify(annotations));
-        addViewAnnotation();
-        console.log(annotation.path);
         addAnnotationsForDelete(annotation.path);
+        deleteListAnnotation();
         //$.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
     });
 });
