@@ -105,7 +105,14 @@
     </div>
 
     <div data-role="footer" data-position="fixed">
-      <h4>Powered by ReinanHS</h4>
+      <h4 id="byReinan">Powered by ReinanHS</h4>
+      <div data-role="navbar" id="mainNavbar" style="display: none;">
+          <ul>
+              <li><a href="#" data-icon="grid" class="ui-btn-active">Anotações</a></li>
+              <li><a href="#favs" data-icon="star">Favoritos</a></li>
+              <li><a href="#setup" data-icon="gear">Configuração</a></li>
+          </ul>
+      </div><!-- /navbar -->
     </div><!-- /footer -->
   </div><!-- /page -->
 
@@ -126,25 +133,81 @@
     </div><!-- /footer -->
   </div><!-- /page -->
 
+
+  <!-- Start of view card page -->
+  <div data-role="page" id="viewCard">
+
+    <div data-role="header">
+      <h1>Notesapp view</h1>
+      <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content htmlStyle">
+        <h2>View the card post</h2>
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+      <h4>Powered by ReinanHS</h4>
+    </div><!-- /footer -->
+  </div><!-- /page -->
+
   <!-- Start of edit card page -->
-  <div data-role="page" id="editCard">
+  <div data-role="page" id="favs">
 
     <div data-role="header">
       <h1>Notesapp Edit</h1>
       <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
-      <a href="#" data-icon="back" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-check ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" id="btnSaveAnnotation">Save</a>
     </div><!-- /header -->
 
     <div role="main" class="ui-content">
-        <div id="editNormal">
-          <div id="trumbowyg-demo"></div>
-        </div>
-        <div id="editLatex" style="display: none;">
-          <div id="trumbowyg-latex"></div>
+        <h4>Lista de favoritos:</h4>
+        <p>Você não salvou nada na sua lista de favoritos!</p>
+    </div><!-- /content -->
+    <div data-role="footer" data-position="fixed">
+      <div data-role="navbar">
+          <ul>
+              <li><a href="#login" data-icon="grid">Anotações</a></li>
+              <li><a href="#" data-icon="star" class="ui-btn-active">Favoritos</a></li>
+              <li><a href="#setup" data-icon="gear">Configuração</a></li>
+          </ul>
+      </div><!-- /navbar -->
+    </div><!-- /footer -->
+  </div><!-- /page -->
+
+  <!-- Start of edit card page -->
+  <div data-role="page" id="setup">
+
+    <div data-role="header">
+      <h1>Notesapp Edit</h1>
+      <a href="#login" data-rel="back" data-icon="carat-l" data-iconpos="notext">Back</a>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <div id="myConfig">
+          <center>
+            <h2>Minha configuração</h2>
+            <img src="img/userPhoto.jpg" alt="My photo">
+            <p id="userName">User Name</p>
+            <p id="emailUser">user@notesapp.com</p>
+          </center>
+          <h6>
+            O Notesapp é um software de código aberto licenciado sob a licença MIT
+            <br>Versão do aplicativo: V0.0.2
+            <br>Este aplicativo está sendo desenvolvido por ReinanHS e Marcosrdac
+          </h6>
+
+          <button class="ui-btn ui-shadow">Button</button>
+          <button class="ui-btn ui-shadow">Sair da conta</button>
         </div>
     </div><!-- /content -->
     <div data-role="footer" data-position="fixed">
-      <h4>Powered by ReinanHS</h4>
+      <div data-role="navbar">
+          <ul>
+              <li><a href="#login" data-icon="grid">Anotações</a></li>
+              <li><a href="#favs" data-icon="star">Favoritos</a></li>
+              <li><a href="#" data-icon="gear" class="ui-btn-active">Configuração</a></li>
+          </ul>
+      </div><!-- /navbar -->
     </div><!-- /footer -->
   </div><!-- /page -->
 

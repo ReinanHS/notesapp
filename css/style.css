@@ -6,3 +6,8 @@
 .htmlStyle img{
 	max-width: 100%;
 }
+#myConfig img{
+	height: 128px;
+	width: 128px;
+	border-radius: 50%;
+}

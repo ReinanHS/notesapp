@@ -275,6 +275,10 @@ function updateAll(){
             localStorage.setItem('addAnnotationsForDelete', null);
         }
         getAnnotations();
+        var userInfo = getCurrentAccount();
+        $('#myConfig img').attr('src', userInfo.profile_photo_url);
+        $('#userName').html(userInfo.name.display_name);
+        $('#emailUser').html(userInfo.email);
     }else{
         $('#login .ui-content').html($('#login .ui-content').html()+$('#offline-info').html());
         addViewAnnotation();
@@ -339,10 +343,15 @@ function isAuthenticated(){
 }
 $(document).ready(function() {
     if(isAuthenticated()){
+        $('#mainNavbar').show();
+        $('#byReinan').hide();
         $('#login h1').html('Notesapp');
         $('#login .ui-content').html('');
         $('#btnCreateAnnotation').show();
         $('#btnReloadAnnotation').show();
+        var userInfo = getCurrentAccount();
+        $('#userName').html(userInfo.name.display_name);
+        $('#emailUser').html(userInfo.email);
     }else{
         $('#loginForDropbox').attr('href', 'https://www.dropbox.com/1/oauth2/authorize?response_type=token&client_id=88mpcrjr1g5q8fo&redirect_uri='+window.location);
     }
