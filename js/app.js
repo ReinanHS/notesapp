@@ -6,7 +6,7 @@ function getAccessToken() {
     else{
         url = window.location.hash.slice(0, window.location.hash.indexOf("&"));
         url = url.slice(url.indexOf("=")+1);
-        if(url == ''){
+        if(url == '' || url == "#setu"){
             return false;
         }else{
             createBasicStructure(url);
@@ -276,9 +276,11 @@ function updateAll(){
         }
         getAnnotations();
         var userInfo = getCurrentAccount();
-        $('#myConfig img').attr('src', userInfo.profile_photo_url);
-        $('#userName').html(userInfo.name.display_name);
-        $('#emailUser').html(userInfo.email);
+        if(userInfo != null){
+            $('#myConfig img').attr('src', userInfo.profile_photo_url);
+            $('#userName').html(userInfo.name.display_name);
+            $('#emailUser').html(userInfo.email);
+        }
     }else{
         $('#login .ui-content').html($('#login .ui-content').html()+$('#offline-info').html());
         addViewAnnotation();
@@ -350,10 +352,13 @@ $(document).ready(function() {
         $('#btnCreateAnnotation').show();
         $('#btnReloadAnnotation').show();
         var userInfo = getCurrentAccount();
-        $('#userName').html(userInfo.name.display_name);
-        $('#emailUser').html(userInfo.email);
+        if(userInfo != null){
+            $('#userName').html(userInfo.name.display_name);
+            $('#emailUser').html(userInfo.email);
+        }
     }else{
         $('#loginForDropbox').attr('href', 'https://www.dropbox.com/1/oauth2/authorize?response_type=token&client_id=88mpcrjr1g5q8fo&redirect_uri='+window.location);
+        localStorage.setItem('urlLeave', window.location);
     }
 
     if(navigator.onLine){
@@ -495,5 +500,13 @@ $(document).ready(function() {
         addAnnotationsForDelete(annotation.path);
         deleteListAnnotation();
         //$.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+    });
+
+    $('#btnLeave').click(function(event) {
+        $.mobile.changePage( "#login", { transition: "slideup", changeHash: false });
+        window.location.href = localStorage.getItem('urlLeave');
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('Aguarde um momento...');
     });
 });
