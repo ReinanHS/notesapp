@@ -327,7 +327,7 @@ function setView(index){
         $('#editLatex').hide();
         $('#trumbowyg-demo').trumbowyg('html', annotations[id].result.annotation);
     }else if(annotations[id].result.type == 'choice-2'){
-        $('#viewCard .ui-content').html('<div lang="latex">'+annotations[id].result.annotation+'</div>');
+        $('#viewCard .ui-content').html('<pre lang="latex">'+LatexIT.pre(annotations[id].result.annotation)+'</pre>');
         $('#editNormal').hide();
         $('#editLatex').show();
         $('#trumbowyg-latex').trumbowyg('html', annotations[id].result.annotation);
@@ -426,13 +426,6 @@ $(document).ready(function() {
         ],
     });
 
-    $('#trumbowyg-latex').trumbowyg({
-        lang: 'pt',
-        btns: [
-            ['fullscreen'],
-        ],
-    });
-
     $('#btnSaveAnnotation').click(function(event) {
         var annotation = JSON.parse(sessionStorage.getItem('newAnnotation'));
         if(sessionStorage.getItem('actionType') == 'create'){
@@ -442,7 +435,7 @@ $(document).ready(function() {
                 if(annotation.type == "choice-1"){
                     annotation.annotation = $('#trumbowyg-demo').trumbowyg('html');
                 }else if(annotation.type == "choice-2"){
-                    annotation.annotation = $('#trumbowyg-latex').trumbowyg('html');
+                    annotation.annotation = $('#textareaLatex').val();
                 }
                 sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
 
