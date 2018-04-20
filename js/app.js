@@ -237,12 +237,14 @@ function addViewAnnotation(){
         var debug = 0;
         for (var i =  0; i <= annotations.length; i++) {
             console.log(annotations[i]);
-            $('#loadAuthenticated h3').html(annotations[i].result.title);
-            $('#byName').html('BY '+annotations[i].result.name);
-            $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
-            $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
-            $('#login .ui-content').append('<div id="'+i+'" onclick="setView(this);"></div>');
-            $('#'+i).html($('#loadAuthenticated').html());
+            if(annotations[i].result.active == true){
+                $('#loadAuthenticated h3').html(annotations[i].result.title);
+                $('#byName').html('BY '+annotations[i].result.name);
+                $('#CardDescription').html(annotations[i].result.annotation.replace(/<\/?[^>]+(>|$)/g, ""));
+                $('#cardData').html('<strong>'+annotations[i].result.date+'</strong>');
+                $('#login .ui-content').append('<div id="'+i+'" onclick="setView(this);"></div>');
+                $('#'+i).html($('#loadAuthenticated').html());
+            }
         }
     }else{
         $('#login .ui-content').html($('#createAnnotationInfo').html());
@@ -336,7 +338,8 @@ function setView(index){
 }
 function deleteListAnnotation(){
     var annotations = JSON.parse(localStorage.getItem('annotations'));
-    delete annotations[sessionStorage.getItem('indexAnnotation')];
+    //delete annotations[sessionStorage.getItem('indexAnnotation')];
+    annotations[sessionStorage.getItem('indexAnnotation')].result.active = false;
     localStorage.setItem('annotations', JSON.stringify(annotations));
     addViewAnnotation();
 }
@@ -393,6 +396,7 @@ $(document).ready(function() {
             name: userName.name.display_name,
             type: $( "#formCreateAnnotation input[type='radio']:checked" ).val(),
             path: getFileName(),
+            active: true,
             createDete: CreateDate,
         }
         sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
