@@ -413,17 +413,19 @@ $(document).ready(function() {
         return false;
     });
 
-    $('#trumbowyg-demo').trumbowyg({
-        lang: 'pt',
-        btns: [
-            ['viewHTML'],
-            ['formatting'],
-            ['strong', 'em', 'del'],
-            ['superscript', 'subscript'],
-            ['insertImage'],
-            ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-            ['unorderedList', 'orderedList'],
-        ],
+    tinymce.init({ 
+      selector:'#editHTML',
+      height: 500,
+      plugins: [
+          "advlist autolink lists link image charmap print preview anchor",
+          "searchreplace visualblocks code fullscreen",
+          "insertdatetime media table contextmenu paste imagetools wordcount"
+      ],
+      toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image",
+      content_css: [
+        '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+        '//www.tinymce.com/css/codepen.min.css'
+      ]
     });
 
     $('#btnSaveAnnotation').click(function(event) {
@@ -433,7 +435,7 @@ $(document).ready(function() {
                 alert('Error ao salvar');
             }else{
                 if(annotation.type == "choice-1"){
-                    annotation.annotation = $('#trumbowyg-demo').trumbowyg('html');
+                    annotation.annotation = tinyMCE.get('editHTML').getContent();
                 }else if(annotation.type == "choice-2"){
                     annotation.annotation = $('#textareaLatex').val();
                 }
