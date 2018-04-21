@@ -330,6 +330,7 @@ function setView(index){
         $('#viewCard .ui-content').html('<pre lang="latex">'+LatexIT.pre(annotations[id].result.annotation)+'</pre>');
         $('#editNormal').hide();
         $('#editLatex').show();
+        $('#textareaLatex').val(annotations[id].result.annotation);
     }
     sessionStorage.setItem('indexAnnotation', id);
     sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
@@ -457,9 +458,9 @@ $(document).ready(function() {
 
 
             if(annotation.result.type == "choice-1"){
-                annotation.result.annotation = $('#trumbowyg-demo').trumbowyg('html');
+                annotation.result.annotation = tinyMCE.get('editHTML').getContent();
             }else if(annotation.result.type == "choice-2"){
-                annotation.result.annotation = $('#trumbowyg-latex').trumbowyg('html');
+                annotation.result.annotation = $('#textareaLatex').val();
             }
             sessionStorage.setItem('newAnnotation', JSON.stringify(annotation));
 
