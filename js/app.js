@@ -325,12 +325,11 @@ function setView(index){
         $('#viewCard .ui-content').html(annotations[id].result.annotation);
         $('#editNormal').show();
         $('#editLatex').hide();
-        $('#trumbowyg-demo').trumbowyg('html', annotations[id].result.annotation);
+        tinyMCE.get('editHTML').setContent(annotations[id].result.annotation);
     }else if(annotations[id].result.type == 'choice-2'){
         $('#viewCard .ui-content').html('<pre lang="latex">'+LatexIT.pre(annotations[id].result.annotation)+'</pre>');
         $('#editNormal').hide();
         $('#editLatex').show();
-        $('#trumbowyg-latex').trumbowyg('html', annotations[id].result.annotation);
     }
     sessionStorage.setItem('indexAnnotation', id);
     sessionStorage.setItem('newAnnotation', JSON.stringify(annotations[id]));
