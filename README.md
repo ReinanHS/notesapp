@@ -1,7 +1,5 @@
 ![minima theme preview](https://uploaddeimagens.com.br/images/001/335/498/thumb/contacts%282%29.png?1521405897)
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
 # Sobre Notesapp
 O Notesapp é uma plataforma organizacional disponível para Web. Sua função é coletar, organizar e anotar informações anotadas no seu computador, celular, ou até mesmo através do website, e sincronizar tudo isso com um banco de dados virtual só seu dropbox.
 
